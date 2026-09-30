@@ -5,7 +5,6 @@ TypeScript / JavaScript 前端学习工作区。
 ## 目录
 
 - `260604learn/` — HTML 基础练习（1-run.html ~ 6.html）
-- `synth-corruption/` — Canvas 2D 游戏示例项目（纯 HTML/CSS/JS）
 
 ## 运行
 
