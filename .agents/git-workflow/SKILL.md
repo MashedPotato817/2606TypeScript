@@ -73,6 +73,7 @@ git push origin main
 - `git revert` 生成的 `Revert "..."` 保持原样，不要改写。
 
 示例：
+
 - `feat: 新增导出功能，支持 PDF 格式`
 - `fix: 修复文件编码检测在 UTF-16 下失效的问题`
 - `fix(server): 修复中文输入法下快捷键冲突`
