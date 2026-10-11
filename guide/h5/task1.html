@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>消息列表 · 逐步指导</title>
+<style>
+:root { color-scheme:light; --ink:#172b45; --muted:#5b6d82; --line:#dce4ee; --blue:#225bcb; --teal:#087c70; }
+* { box-sizing:border-box; }
+body { margin:0; background:#f3f6fb; color:var(--ink); font:16px/1.75 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif; }
+a { color:var(--blue); text-underline-offset:3px; }
+button:focus-visible,a:focus-visible,summary:focus-visible,h2:focus-visible { outline:3px solid #e49b27; outline-offset:4px; }
+[hidden] { display:none !important; }
+header { background:#142d50; color:#fff; }
+.header-inner { max-width:1160px; margin:auto; padding:28px 24px 26px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+.eyebrow { margin:0 0 3px; color:#a8c5ec; font-size:12px; letter-spacing:.15em; }
+h1 { margin:0; font-size:28px; line-height:1.4; }
+.subtitle { margin:5px 0 0; color:#d3e1f4; font-size:14px; }
+.header-links { display:flex; gap:18px; white-space:nowrap; font-size:14px; }
+.header-links a { color:#e1edff; }
+.layout { max-width:1160px; margin:28px auto; padding:0 24px; display:grid; grid-template-columns:242px minmax(0,1fr); gap:28px; align-items:start; }
+.sidebar { position:sticky; top:20px; background:#fff; border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+.sidebar summary { padding:16px 18px; cursor:pointer; font-weight:650; }
+.sidebar nav { padding:0 10px 14px; max-height:calc(100vh - 110px); overflow:auto; }
+.nav-group { margin:12px 10px 5px; font-size:12px; font-weight:700; color:var(--muted); }
+nav a { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; text-decoration:none; color:var(--muted); font-size:13px; line-height:1.5; }
+nav a span { flex:none; font-variant-numeric:tabular-nums; font-size:11px; }
+nav a:hover { background:#f2f5fa; color:var(--ink); }
+nav a[aria-current="step"] { background:#e9f0ff; color:#174ba8; font-weight:650; }
+main { min-width:0; }
+.reading { display:flex; justify-content:space-between; gap:12px; margin-bottom:8px; color:var(--muted); font-size:13px; }
+progress { display:block; width:100%; height:5px; border:0; border-radius:9px; overflow:hidden; accent-color:var(--blue); margin-bottom:22px; }
+progress::-webkit-progress-bar { background:#e0e7f1; }
+progress::-webkit-progress-value { background:var(--blue); }
+.step-card { padding:30px 34px; background:#fff; border:1px solid var(--line); border-radius:18px; box-shadow:0 8px 24px #142d5006; }
+.step-meta { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.tag { background:#e4f3f0; color:#00685e; font-size:12px; font-weight:700; padding:3px 10px; border-radius:6px; }
+.step-number { color:var(--muted); font-size:12px; }
+h2 { font-size:26px; line-height:1.4; margin:17px 0 9px; }
+.goal { color:var(--muted); margin:0; }
+.file { font-size:12px; color:var(--muted); margin:16px 0 24px; overflow-wrap:anywhere; }
+code { font:.9em/1.6 Consolas,"SFMono-Regular",monospace; background:#eef2f8; padding:2px 5px; border-radius:4px; overflow-wrap:anywhere; }
+section { margin-top:24px; }
+h3 { margin:0 0 10px; font-size:14px; font-weight:750; }
+ul { padding-left:21px; margin:0; }
+li + li { margin-top:7px; }
+.code-label { background:#203655; color:#a9c3e8; padding:7px 14px 0; margin-top:15px; border-radius:10px 10px 0 0; font:10px/1.5 Consolas,monospace; }
+pre { margin:0; background:#203655; color:#edf4ff; border-radius:0 0 10px 10px; padding:12px 14px 16px; overflow-x:auto; font-size:13px; line-height:1.75; }
+pre code { background:none; padding:0; color:inherit; font:inherit; overflow-wrap:normal; }
+.checks { background:#f0f8f5; border-left:3px solid var(--teal); border-radius:0 8px 8px 0; padding:16px 18px; }
+.checks h3 { color:#006b5f; }
+.question { border-top:1px solid var(--line); padding-top:20px; }
+.question p { margin:0; color:var(--muted); }
+.hints details { border:1px solid var(--line); border-radius:9px; margin-top:9px; padding:0 14px; }
+.hints summary { padding:11px 0; cursor:pointer; font-size:14px; color:#3d5677; }
+.hints details p { margin:0 0 14px; font-size:14px; color:var(--muted); }
+.hints pre { margin-bottom:14px; }
+.independent { color:var(--teal); margin-bottom:0; font-size:14px; }
+.flow { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:14px; margin:18px 0 25px; background:#f5f8fd; padding:16px 12px; border:1px solid #e5ecf6; border-radius:10px; }
+.flow > div { display:grid; justify-items:center; gap:8px; }
+.flow small { color:var(--muted); font-size:11px; }
+.flow strong { color:var(--blue); font-size:18px; }
+.arrow { color:#6884aa; font-size:12px; }
+.chips { display:flex; gap:5px; }
+.chips b { width:29px; height:29px; display:grid; place-items:center; border:1px solid #bdd0ed; border-radius:6px; background:#fff; color:var(--blue); font-size:13px; }
+.chips .accent { background:#dff2ed; color:#006b5f; border-color:#9dcfc2; }
+.chips .muted { color:#72839a; border-style:dashed; background:transparent; }
+.controls { display:flex; justify-content:space-between; align-items:center; gap:15px; margin-top:20px; }
+button { border:1px solid var(--line); border-radius:9px; padding:11px 19px; font-family:inherit; font-size:14px; font-weight:600; line-height:1.5; background:#fff; color:var(--ink); cursor:pointer; min-height:44px; }
+button.primary { background:var(--blue); color:#fff; border-color:var(--blue); }
+button:disabled { opacity:.45; cursor:default; }
+.controls small { text-align:center; font-size:12px; color:var(--muted); }
+.help { margin-top:22px; padding:18px 0; border-top:1px solid var(--line); color:var(--muted); font-size:13px; }
+.help p { margin:0; }
+.help a { display:inline-block; margin-top:9px; }
+noscript { display:block; padding:20px; }
+@media (max-width:760px) {
+ .header-inner { padding:22px 18px; display:block; }
+ .header-links { margin-top:16px; }
+ h1 { font-size:24px; }
+ .layout { display:block; margin:18px auto; padding:0 14px; }
+ .sidebar { position:static; margin-bottom:20px; }
+ .sidebar nav { max-height:230px; }
+ .step-card { padding:22px 20px; border-radius:13px; }
+ h2 { font-size:23px; }
+ .controls { flex-wrap:wrap; }
+ .controls small { width:100%; order:3; }
+ .reading { font-size:12px; }
+}
+</style>
+</head>
+<body>
+<header><div class="header-inner">
+<div><p class="eyebrow">TYPESCRIPT / 第 1 阶段</p><h1>消息列表，逐步练习</h1><p class="subtitle">每次一个小任务。先自己写，卡住再看提示。</p></div>
+<div class="header-links"><a href="../md/task1.md">Markdown 指导书</a><a href="../README.md">项目路线 ↗</a></div>
+</div></header>
+<noscript>启用 JavaScript 后可逐步切换任务，也可阅读 <a href="../md/task1.md">Markdown 指导书</a>。</noscript>
+<div class="layout">
+<details class="sidebar" open><summary>15 个小任务 · 目录</summary><nav aria-label="小任务目录"><p class="nav-group">准备</p>
+<a href="#step-1" data-target="1" aria-current="step"><span>01</span>确认运行工具</a>
+<a href="#step-2" data-target="2"><span>02</span>第一次检查与运行</a>
+<p class="nav-group">JS 基础</p>
+<a href="#step-3" data-target="3"><span>03</span>展开成一个新数组</a>
+<a href="#step-4" data-target="4"><span>04</span>只修改新数组</a>
+<a href="#step-5" data-target="5"><span>05</span>普通函数与返回值</a>
+<a href="#step-6" data-target="6"><span>06</span>改写成箭头函数</a>
+<a href="#step-7" data-target="7"><span>07</span>让 filter 调用回调</a>
+<a href="#step-8" data-target="8"><span>08</span>改写筛选条件</a>
+<p class="nav-group">消息类型</p>
+<a href="#step-9" data-target="9"><span>09</span>限制消息角色</a>
+<a href="#step-10" data-target="10"><span>10</span>描述第一条消息</a>
+<a href="#step-11" data-target="11"><span>11</span>故意写错再修复</a>
+<a href="#step-12" data-target="12"><span>12</span>建立消息数组</a>
+<p class="nav-group">消息操作</p>
+<a href="#step-13" data-target="13"><span>13</span>添加消息，保留原数组</a>
+<a href="#step-14" data-target="14"><span>14</span>筛选用户消息</a>
+<a href="#step-15" data-target="15"><span>15</span>独立筛选助手消息</a></nav></details>
+<main>
+<div class="reading"><span id="reading-position" aria-live="polite">正在阅读 1 / 15</span><span>练习结果请对照验收</span></div>
+<progress id="reading-progress" max="15" value="1" aria-label="阅读位置"></progress>
+<article class="step-card" id="step-1" data-step><div class="step-meta"><span class="tag">准备</span><span class="step-number">小任务 01</span></div><h2 tabindex="-1">确认运行工具</h2><p class="goal">确认终端能找到 Node 和 TypeScript。</p><p class="file">练习位置 <code>仓库根目录</code></p><section><h3>现在动手</h3><ul><li>在仓库根目录执行两条命令，记录版本。</li></ul><div class="code-label">POWERSHELL</div><pre><code>node --version
+tsc --version</code></pre></section><section class="checks"><h3>对照验收</h3><ul><li>Node 为 24 或更高版本；tsc 能输出版本。</li></ul></section><section class="question"><h3>用自己的话回答</h3><p>这两个工具分别负责运行代码，还是检查类型？</p></section><section class="hints"><h3>卡住再展开</h3><details><summary>找不到 tsc 时</summary><p>可用 npx --package typescript tsc --version 检查；首次可能提示下载 TypeScript。先提供完整报错，再处理工具问题。</p></details></section></article>
+<article class="step-card" id="step-2" data-step hidden><div class="step-meta"><span class="tag">准备</span><span class="step-number">小任务 02</span></div><h2 tabindex="-1">第一次检查与运行</h2><p class="goal">走通一次“类型检查 → 运行”。</p><p class="file">练习位置 <code>task1/0-js-basics.ts</code></p><section><h3>现在动手</h3><ul><li>自己创建 task1/0-js-basics.ts，写入起步代码。后续实验写在 export {}; 前面。</li><li>在仓库根目录先执行检查，再执行运行命令。</li></ul><div class="code-label">TS</div><pre><code>console.log(&quot;开始练习&quot;);
+export {};</code></pre><div class="code-label">POWERSHELL</div><pre><code>tsc --strict --noEmit task1/0-js-basics.ts
+node task1/0-js-basics.ts</code></pre></section><section class="checks"><h3>对照验收</h3><ul><li>类型检查无报错；运行输出 开始练习。</li></ul></section><section class="question"><h3>用自己的话回答</h3><p>node 运行成功，是否代表类型检查也通过了？</p></section><section class="hints"><h3>卡住再展开</h3><details><summary>命令与模块</summary><p>--strict 开启严格检查；--noEmit 不生成 JS。export {}; 把练习标记为模块，避免多个文件的同名变量干扰类型检查。Node 擦除类型后运行，不做类型检查；默认方式不支持 enum 等需要转换的语法。</p></details></section></article>
+<article class="step-card" id="step-3" data-step hidden><div class="step-meta"><span class="tag">JS 基础</span><span class="step-number">小任务 03</span></div><h2 tabindex="-1">展开成一个新数组</h2><p class="goal">理解展开语法与数组身份。</p><p class="file">练习位置 <code>task1/0-js-basics.ts</code></p><div class="flow"><div><small>原数组 numbers</small><span class="chips"><b>1</b><b>2</b></span></div><span class="arrow">→ 展开 →</span><div><small>新数组 copied</small><span class="chips"><b>1</b><b>2</b><b class="accent">3</b></span></div></div><section><h3>现在动手</h3><ul><li>先预测三行输出，再手写并运行下面的实验。</li></ul><div class="code-label">TS</div><pre><code>const numbers = [1, 2];
+const copied = [...numbers, 3];
+console.log(numbers);
+console.log(copied);
+console.log(numbers === copied);</code></pre></section><section class="checks"><h3>对照验收</h3><ul><li>依次输出 [1, 2]、[1, 2, 3]、false。</li></ul></section><section class="question"><h3>用自己的话回答</h3><p>为什么元素相似，两个数组用 === 比较却是 false？</p></section><section class="hints"><h3>卡住再展开</h3><details><summary>展开与比较</summary><p>...numbers 把原数组的元素放进新数组。=== 在这里比较是否指向同一个数组，不逐个比较元素。</p></details></section></article>
+<article class="step-card" id="step-4" data-step hidden><div class="step-meta"><span class="tag">JS 基础</span><span class="step-number">小任务 04</span></div><h2 tabindex="-1">只修改新数组</h2><p class="goal">理解 const 与数组内部修改。</p><p class="file">练习位置 <code>task1/0-js-basics.ts</code></p><section><h3>现在动手</h3><ul><li>接着上一步，在 copied 末尾追加数字 4，再打印 numbers 和 copied。</li></ul></section><section class="checks"><h3>对照验收</h3><ul><li>numbers 仍为 [1, 2]；copied 变为 [1, 2, 3, 4]。</li></ul></section><section class="question"><h3>用自己的话回答</h3><p>const 限制重新赋值，还是禁止数组内部修改？</p></section><section class="hints"><h3>卡住再展开</h3><details><summary>提示 1：修改哪个数组</summary><p>对 copied 追加，不对 numbers 追加。</p></details><details><summary>提示 2：方法语法</summary><p>数组.push(元素) 会修改调用它的数组。先观察效果，后面的消息添加函数要求返回新数组。</p></details></section></article>
+<article class="step-card" id="step-5" data-step hidden><div class="step-meta"><span class="tag">JS 基础</span><span class="step-number">小任务 05</span></div><h2 tabindex="-1">普通函数与返回值</h2><p class="goal">确认参数传入与结果返回。</p><p class="file">练习位置 <code>task1/0-js-basics.ts</code></p><div class="flow"><div><small>输入</small><strong>3</strong></div><span class="arrow">→</span><div><small>函数 double</small><strong>value × 2</strong></div><span class="arrow">→</span><div><small>输出</small><strong>6</strong></div></div><section><h3>现在动手</h3><ul><li>运行下面的 double 函数，再分别用 0 和 -2 调用它。</li></ul><div class="code-label">TS</div><pre><code>function double(value: number): number {
+  return value * 2;
+}
+console.log(double(3));</code></pre></section><section class="checks"><h3>对照验收</h3><ul><li>输入 3、0、-2 时，分别返回 6、0、-4。</li></ul></section><section class="question"><h3>用自己的话回答</h3><p>实参 3 怎样传给 value？返回值来自哪一行？</p></section><section class="hints"><h3>卡住再展开</h3><details><summary>参数与类型</summary><p>value: number 描述参数类型，括号后的 : number 描述返回类型；return value * 2 是 JS 的计算与返回。</p></details></section></article>
+<article class="step-card" id="step-6" data-step hidden><div class="step-meta"><span class="tag">JS 基础</span><span class="step-number">小任务 06</span></div><h2 tabindex="-1">改写成箭头函数</h2><p class="goal">学会一个简单的箭头函数。</p><p class="file">练习位置 <code>task1/0-js-basics.ts</code></p><section><h3>现在动手</h3><ul><li>保留 double，自己写 doubleArrow：接收一个数字，返回它的两倍。</li></ul></section><section class="checks"><h3>对照验收</h3><ul><li>doubleArrow 对 3、0、-2 的结果与 double 一致。</li></ul></section><section class="question"><h3>用自己的话回答</h3><p>=&gt; 后直接写表达式，与使用花括号时的 return 有什么区别？</p></section><section class="hints"><h3>卡住再展开</h3><details><summary>提示 1：表达式版本</summary><p>参考这个原样返回参数的函数，再改成翻倍。</p><div class="code-label">TS</div><pre><code>const identity = (value: number): number =&gt; value;</code></pre></details><details><summary>提示 2：花括号版本</summary><p>使用花括号时显式写 return。本步只比较参数与返回值，其他差异之后用到时再学。</p><div class="code-label">TS</div><pre><code>const identityWithBlock = (value: number): number =&gt; {
+  return value;
+};</code></pre></details></section></article>
+<article class="step-card" id="step-7" data-step hidden><div class="step-meta"><span class="tag">JS 基础</span><span class="step-number">小任务 07</span></div><h2 tabindex="-1">让 filter 调用回调</h2><p class="goal">理解数组如何调用你提供的函数。</p><p class="file">练习位置 <code>task1/0-js-basics.ts</code></p><div class="flow"><div><small>每个元素</small><span class="chips"><b class="muted">1</b><b class="muted">2</b><b>3</b><b>4</b></span></div><span class="arrow">→ 大于 2 →</span><div><small>保留结果</small><span class="chips"><b class="accent">3</b><b class="accent">4</b></span></div></div><section><h3>现在动手</h3><ul><li>先预测输出，再运行下面的筛选实验。</li><li>临时在回调内打印 value，观察每次传入的值；观察后去掉这行日志。</li></ul><div class="code-label">TS</div><pre><code>const values = [1, 2, 3, 4];
+const larger = values.filter(function (value) {
+  return value &gt; 2;
+});
+console.log(larger);
+console.log(values);</code></pre></section><section class="checks"><h3>对照验收</h3><ul><li>结果为 [3, 4]，原数组仍为 [1, 2, 3, 4]；回调依次收到 1、2、3、4。</li></ul></section><section class="question"><h3>用自己的话回答</h3><p>回调由谁调用？它接收一个元素，还是整个数组？</p></section><section class="hints"><h3>卡住再展开</h3><details><summary>回调的返回值</summary><p>filter 对每个元素执行回调，返回真值时保留当前元素，否则丢弃。这里的比较表达式返回 true 或 false；不要返回元素来代替条件。</p></details></section></article>
+<article class="step-card" id="step-8" data-step hidden><div class="step-meta"><span class="tag">JS 基础</span><span class="step-number">小任务 08</span></div><h2 tabindex="-1">改写筛选条件</h2><p class="goal">把箭头函数用到 filter，再独立改变条件。</p><p class="file">练习位置 <code>task1/0-js-basics.ts</code></p><section><h3>现在动手</h3><ul><li>先把上一步的普通回调改成箭头函数，保持筛选结果一致。通过后再改条件，只保留偶数。一次只改一处。</li></ul></section><section class="checks"><h3>对照验收</h3><ul><li>改写后大于 2 的结果仍为 [3, 4]；改为偶数后是 [2, 4]；原数组不变。</li></ul></section><section class="question"><h3>用自己的话回答</h3><p>比较条件怎样决定一个元素是否被保留？</p></section><section class="hints"><h3>卡住再展开</h3><details><summary>提示 1：回调形状</summary><p>把 filter 接收的函数写成 (value) =&gt; 条件表达式。</p></details><details><summary>提示 2：偶数判断</summary><p>用取余运算 % 检查一个数除以 2 的余数是否为 0。</p></details></section></article>
+<article class="step-card" id="step-9" data-step hidden><div class="step-meta"><span class="tag">消息类型</span><span class="step-number">小任务 09</span></div><h2 tabindex="-1">限制消息角色</h2><p class="goal">用字面量联合表达允许的角色。</p><p class="file">练习位置 <code>task1/9-message.ts</code></p><section><h3>现在动手</h3><ul><li>创建 task1/9-message.ts，末尾写 export {};。定义 Role，只允许 user、assistant、system。</li><li>创建一个明确标注为 Role 的变量。先赋合法值，再尝试 robot，检查后恢复。</li></ul><div class="code-label">POWERSHELL</div><pre><code>tsc --strict --noEmit task1/9-message.ts
+node task1/9-message.ts</code></pre></section><section class="checks"><h3>对照验收</h3><ul><li>合法角色通过严格检查；robot 被类型检查拒绝。</li></ul></section><section class="question"><h3>用自己的话回答</h3><p>如果 Role 改成 string，检查会漏掉哪种错误？</p></section><section class="hints"><h3>卡住再展开</h3><details><summary>提示 1：可选值</summary><p>用字面量联合连接允许的值。在类型位置，| 表达可选类型，不执行 C 的按位或。</p></details><details><summary>提示 2：其他类型的例子</summary><p>把这个模式迁移到消息角色。</p><div class="code-label">TS</div><pre><code>type SwitchState = &quot;on&quot; | &quot;off&quot;;</code></pre></details></section></article>
+<article class="step-card" id="step-10" data-step hidden><div class="step-meta"><span class="tag">消息类型</span><span class="step-number">小任务 10</span></div><h2 tabindex="-1">描述第一条消息</h2><p class="goal">用对象类型约束一条消息。</p><p class="file">练习位置 <code>task1/9-message.ts</code></p><section><h3>现在动手</h3><ul><li>定义 Message，字段为数字 id、角色 role、字符串 content。</li><li>创建 first，明确标注为 Message：id 为 1，角色为 user，内容为 你好。打印 first.content。</li></ul></section><section class="checks"><h3>对照验收</h3><ul><li>严格检查通过；运行输出 你好。</li></ul></section><section class="question"><h3>用自己的话回答</h3><p>运行时还存在 Message 这个类型吗？</p></section><section class="hints"><h3>卡住再展开</h3><details><summary>提示 1：字段类型</summary><p>interface 描述对象字段。把 Role 用作 role 的类型，不要把角色重新写成任意 string。</p></details><details><summary>提示 2：语法参考</summary><p>参考其他对象的类型；对象值中的字段用逗号分隔。</p><div class="code-label">TS</div><pre><code>interface SwitchInfo {
+  id: number;
+  state: SwitchState;
+}</code></pre></details></section></article>
+<article class="step-card" id="step-11" data-step hidden><div class="step-meta"><span class="tag">消息类型</span><span class="step-number">小任务 11</span></div><h2 tabindex="-1">故意写错再修复</h2><p class="goal">亲自确认检查能发现错误。</p><p class="file">练习位置 <code>task1/9-message.ts</code></p><section><h3>现在动手</h3><ul><li>依次修改 first：角色改成 robot、content 改成数字 123、删除 content。每次只做一种错误，执行类型检查，记录报错后恢复。</li></ul></section><section class="checks"><h3>对照验收</h3><ul><li>分别发现非法角色、字段类型错误、缺少必填字段；最终恢复后检查通过。</li></ul></section><section class="question"><h3>用自己的话回答</h3><p>哪些限制是 TS 检查出来的，哪些需要程序在运行时检查？</p></section><section class="hints"><h3>卡住再展开</h3><details><summary>看证据</summary><p>保留完整命令与错误信息，不靠能否运行判断类型是否正确。对象类型约束不会自动变成运行时校验。</p></details></section></article>
+<article class="step-card" id="step-12" data-step hidden><div class="step-meta"><span class="tag">消息类型</span><span class="step-number">小任务 12</span></div><h2 tabindex="-1">建立消息数组</h2><p class="goal">把多条消息放进有类型的数组。</p><p class="file">练习位置 <code>task1/9-message.ts</code></p><section><h3>现在动手</h3><ul><li>创建助手消息 second，id 为 2，内容自定。定义 messages: Message[]，按顺序放入 first 和 second。</li><li>打印长度与两个角色；临时放入数字 123，确认检查拒绝后恢复。</li></ul></section><section class="checks"><h3>对照验收</h3><ul><li>长度为 2，角色顺序为 user、assistant；数字不能作为消息元素。</li></ul></section><section class="question"><h3>用自己的话回答</h3><p>Message[] 限制数组长度，还是元素类型？</p></section><section class="hints"><h3>卡住再展开</h3><details><summary>数组语法</summary><p>数字数组可写为 const items: number[] = [1, 2]。把元素类型与元素换成消息。</p></details></section></article>
+<article class="step-card" id="step-13" data-step hidden><div class="step-meta"><span class="tag">消息操作</span><span class="step-number">小任务 13</span></div><h2 tabindex="-1">添加消息，保留原数组</h2><p class="goal">将展开实验迁移到消息数组。</p><p class="file">练习位置 <code>task1/9-message.ts</code></p><section><h3>现在动手</h3><ul><li>写 addMessage(list: Message[], message: Message): Message[]，返回带有新消息的新数组。</li><li>创建 third：id 为 3，角色为 user，内容自定。把添加到 messages 的结果保存为 updated。</li></ul></section><section class="checks"><h3>对照验收</h3><ul><li>原数组 id 为 [1, 2]，新数组 id 为 [1, 2, 3]；长度分别为 2、3；messages === updated 为 false。</li><li>向空数组添加 third，得到仅含 id 3 的数组；原有消息内容不变。</li></ul></section><section class="question"><h3>用自己的话回答</h3><p>直接对 list 使用 push，能否满足保留原数组的要求？</p></section><section class="hints"><h3>卡住再展开</h3><details><summary>提示 1：回想展开实验</summary><p>用原数组元素与新消息组成一个新数组，再返回它。</p></details><details><summary>提示 2：函数骨架</summary><p>完成时替换占位 throw。它只让未实现的函数在调用时明确失败，不表示练习完成。</p><div class="code-label">TS</div><pre><code>function addMessage(list: Message[], message: Message): Message[] {
+  throw new Error(&quot;请先完成函数体&quot;);
+}</code></pre></details><details><summary>验收后再看：浅拷贝</summary><p>先预测 false、true，再运行。新数组不同，但其中的消息对象仍共享；本阶段不要求深拷贝。</p><div class="code-label">TS</div><pre><code>const original = [first];
+const shallow = [...original];
+console.log(original === shallow);
+console.log(original[0] === shallow[0]);</code></pre></details></section></article>
+<article class="step-card" id="step-14" data-step hidden><div class="step-meta"><span class="tag">消息操作</span><span class="step-number">小任务 14</span></div><h2 tabindex="-1">筛选用户消息</h2><p class="goal">将 filter 实验迁移到消息筛选。</p><p class="file">练习位置 <code>task1/9-message.ts</code></p><section><h3>现在动手</h3><ul><li>写 getUserMessages(list: Message[]): Message[]，按原顺序返回用户消息。</li><li>依次检查 messages、updated、仅含 second 的数组和空数组。</li></ul></section><section class="checks"><h3>对照验收</h3><ul><li>结果 id 依次为 [1]、[1, 3]、[]、[]；输入数组的长度、顺序与内容不变。</li></ul></section><section class="question"><h3>用自己的话回答</h3><p>回调参数为什么通常不用再写 : Message？角色比较发生在检查时，还是运行时？</p></section><section class="hints"><h3>卡住再展开</h3><details><summary>提示 1：当前元素是消息</summary><p>数字实验比较元素的数值；这里比较当前消息的 role 是否等于目标角色。</p></details><details><summary>提示 2：先普通函数，再箭头</summary><p>先用普通函数作为回调，只写一个角色比较条件。通过后改成箭头函数，并观察 TS 从 Message[] 推断参数类型。</p></details></section></article>
+<article class="step-card" id="step-15" data-step hidden><div class="step-meta"><span class="tag">消息操作</span><span class="step-number">小任务 15</span></div><h2 tabindex="-1">独立筛选助手消息</h2><p class="goal">不看提示，独立完成一次需求变化。</p><p class="file">练习位置 <code>task1/9-message.ts</code></p><section><h3>现在动手</h3><ul><li>关闭前面提示，写 getAssistantMessages，只保留助手消息。</li><li>检查 updated 与空数组。随后解释 Role、Message[]、展开、箭头函数、filter 各自负责什么。</li></ul></section><section class="checks"><h3>对照验收</h3><ul><li>updated 的结果 id 为 [2]，空数组的结果为 []；原数组不变；严格检查通过。</li><li>能解释关键代码，且没有照搬前面的提示。</li></ul></section><section class="question"><h3>用自己的话回答</h3><p>哪部分是 TS 类型约束，哪部分是 JS 运行行为？</p></section><p class="independent">这一步独立完成，先不看前面的提示。</p></article>
+<div class="controls">
+<button id="previous" type="button" disabled>← 上一步</button>
+<small>一步一练，通过验收再继续</small>
+<button id="next" class="primary" type="button">下一步 →</button>
+</div>
+<div class="help"><p>卡住时，提供小任务编号、文件路径、代码、执行命令、预期结果和完整输出。我每轮给一级提示，等你尝试后继续。</p><a href="../md/task1.md#过关与求助">查看过关清单</a> · <a href="https://nodejs.org/docs/latest-v24.x/api/typescript.html#type-stripping">Node TS 运行说明</a></div>
+</main>
+</div>
+<script>
+"use strict";
+const steps = Array.from(document.querySelectorAll("[data-step]"));
+const links = Array.from(document.querySelectorAll("[data-target]"));
+const previous = document.getElementById("previous");
+const next = document.getElementById("next");
+const position = document.getElementById("reading-position");
+const progress = document.getElementById("reading-progress");
+let current = 0;
+if (window.matchMedia("(max-width: 760px)").matches) {
+  document.querySelector(".sidebar").open = false;
+}
+
+function showStep(focusHeading = false) {
+  const requested = steps.findIndex(step => "#" + step.id === location.hash);
+  current = requested >= 0 ? requested : 0;
+  steps.forEach((step, index) => { step.hidden = index !== current; });
+  links.forEach((link, index) => {
+    if (index === current) link.setAttribute("aria-current", "step");
+    else link.removeAttribute("aria-current");
+  });
+  previous.disabled = current === 0;
+  next.disabled = current === steps.length - 1;
+  position.textContent = "正在阅读 " + (current + 1) + " / " + steps.length;
+  progress.value = current + 1;
+  document.title = steps[current].querySelector("h2").textContent + " · 消息列表指导";
+  if (focusHeading) steps[current].querySelector("h2").focus({ preventScroll: false });
+}
+previous.addEventListener("click", () => {
+  if (current > 0) location.hash = steps[current - 1].id;
+});
+next.addEventListener("click", () => {
+  if (current < steps.length - 1) location.hash = steps[current + 1].id;
+});
+window.addEventListener("hashchange", () => showStep(true));
+showStep();
+</script>
+</body>
+</html>
